@@ -122,3 +122,29 @@ def test_unemployment_change_endpoint_rejects_invalid_rate_range() -> None:
 
     assert response.status_code == 422
     assert response.json()["detail"][0]["loc"] == ["body", "unemployment", "current_rate"]
+
+
+def test_unemployment_change_endpoint_returns_low_confidence_for_missing_metadata() -> None:
+    response = client.post(
+        "/api/v1/analysis/unemployment-change",
+        json={
+            "unemployment": {
+                "previous_rate": 6.3,
+                "current_rate": 6.5,
+                "previous_period": "2026-01",
+                "current_period": "2026-02",
+                "geography": "Canada",
+            },
+            "evidence_metadata": {
+                "source_name": "Statistics Canada",
+                "measure_name": "Unemployment rate",
+                "unit": "percent",
+                "dataset_id": None,
+                "table_id": None,
+                "retrieval_timestamp": None,
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["finding"]["confidence"] == "low"

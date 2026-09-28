@@ -28,7 +28,7 @@ def analyze_unemployment_change(
         percentage_point_change(unemployment.previous_rate, unemployment.current_rate)
     )
     finding_statement = _build_finding_statement(unemployment, percentage_point_delta)
-    confidence = _determine_confidence(unemployment, evidence_metadata)
+    confidence = _determine_confidence(evidence_metadata)
     caveat = Caveat(message="Single-period change; interpret with broader trend context.")
     metrics = UnemploymentMetrics(
         previous_rate=unemployment.previous_rate,
@@ -113,9 +113,7 @@ def _build_finding_statement(
     )
 
 
-def _determine_confidence(
-    unemployment: UnemploymentInput, evidence_metadata: EvidenceMetadata
-) -> ConfidenceLabel:
+def _determine_confidence(evidence_metadata: EvidenceMetadata) -> ConfidenceLabel:
     missing_metadata = (
         evidence_metadata.retrieval_timestamp is None
         or (evidence_metadata.dataset_id is None and evidence_metadata.table_id is None)
