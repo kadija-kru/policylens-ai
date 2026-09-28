@@ -161,11 +161,19 @@ Example response:
     "evidence": [
       {
         "claim_id": "unemployment-change",
+        "observations": [],
         "calculations": [
+          {
+            "calculation_type": "absolute_change",
+            "formula": "current_rate - previous_rate",
+            "value": 0.2,
+            "input_metrics": ["previous_rate", "current_rate"]
+          },
           {
             "calculation_type": "percentage_point_change",
             "formula": "current_rate - previous_rate",
-            "value": 0.2
+            "value": 0.2,
+            "input_metrics": ["previous_rate", "current_rate"]
           }
         ],
         "note": "Source Statistics Canada; periods 2026-01 and 2026-02."
@@ -188,7 +196,17 @@ Example response:
     },
     "calculation": {
       "formula": "current_rate - previous_rate",
+      "inputs": {
+        "current_rate": 6.5,
+        "previous_rate": 6.3
+      },
       "output": 0.2
+    },
+    "numeric_output": {
+      "previous_rate": 6.3,
+      "current_rate": 6.5,
+      "absolute_change": 0.2,
+      "percentage_point_change": 0.2
     }
   }
 }

@@ -15,6 +15,8 @@ from policylens.models.unemployment import (
 )
 from policylens.tools.calculations import absolute_change, percentage_point_change
 
+EDGE_RATE_THRESHOLD = 0.5
+
 
 def analyze_unemployment_change(
     unemployment: UnemploymentInput, evidence_metadata: EvidenceMetadata
@@ -123,10 +125,10 @@ def _determine_confidence(
     unemployment: UnemploymentInput, evidence_metadata: EvidenceMetadata
 ) -> ConfidenceLabel:
     edge_case_rate = (
-        unemployment.previous_rate <= 0.0
-        or unemployment.previous_rate >= 100.0
-        or unemployment.current_rate <= 0.0
-        or unemployment.current_rate >= 100.0
+        unemployment.previous_rate <= EDGE_RATE_THRESHOLD
+        or unemployment.previous_rate >= 100.0 - EDGE_RATE_THRESHOLD
+        or unemployment.current_rate <= EDGE_RATE_THRESHOLD
+        or unemployment.current_rate >= 100.0 - EDGE_RATE_THRESHOLD
     )
     missing_metadata = (
         evidence_metadata.retrieval_timestamp is None
