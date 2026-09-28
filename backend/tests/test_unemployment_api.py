@@ -36,8 +36,8 @@ def test_unemployment_change_endpoint_returns_deterministic_briefing() -> None:
         "metrics": {
             "previous_rate": 6.3,
             "current_rate": 6.5,
-            "absolute_change": 0.20000000000000018,
-            "percentage_point_change": 0.20000000000000018,
+            "absolute_change": 0.2,
+            "percentage_point_change": 0.2,
         },
         "finding": {
             "statement": (
@@ -57,13 +57,13 @@ def test_unemployment_change_endpoint_returns_deterministic_briefing() -> None:
                     "calculations": [
                         {
                             "calculation_type": "absolute_change",
-                            "value": 0.20000000000000018,
+                            "value": 0.2,
                             "formula": "current_rate - previous_rate",
                             "input_metrics": ["previous_rate", "current_rate"],
                         },
                         {
                             "calculation_type": "percentage_point_change",
-                            "value": 0.20000000000000018,
+                            "value": 0.2,
                             "formula": "current_rate - previous_rate",
                             "input_metrics": ["previous_rate", "current_rate"],
                         },
@@ -95,13 +95,13 @@ def test_unemployment_change_endpoint_returns_deterministic_briefing() -> None:
                     "current_rate": 6.5,
                     "previous_rate": 6.3,
                 },
-                "output": 0.20000000000000018,
+                "output": 0.2,
             },
             "numeric_output": {
                 "previous_rate": 6.3,
                 "current_rate": 6.5,
-                "absolute_change": 0.20000000000000018,
-                "percentage_point_change": 0.20000000000000018,
+                "absolute_change": 0.2,
+                "percentage_point_change": 0.2,
             },
         },
     }

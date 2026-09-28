@@ -21,9 +21,11 @@ def analyze_unemployment_change(
 ) -> BriefingResponse:
     """Return a deterministic briefing response for unemployment-rate changes."""
 
-    absolute_delta = absolute_change(unemployment.previous_rate, unemployment.current_rate)
-    percentage_point_delta = percentage_point_change(
-        unemployment.previous_rate, unemployment.current_rate
+    absolute_delta = _normalize_delta(
+        absolute_change(unemployment.previous_rate, unemployment.current_rate)
+    )
+    percentage_point_delta = _normalize_delta(
+        percentage_point_change(unemployment.previous_rate, unemployment.current_rate)
     )
     finding_statement = _build_finding_statement(unemployment, percentage_point_delta)
     confidence = _determine_confidence(unemployment, evidence_metadata)
@@ -120,7 +122,12 @@ def _build_finding_statement(
 def _determine_confidence(
     unemployment: UnemploymentInput, evidence_metadata: EvidenceMetadata
 ) -> ConfidenceLabel:
-    edge_case_rate = unemployment.previous_rate in {0, 100} or unemployment.current_rate in {0, 100}
+    edge_case_rate = (
+        unemployment.previous_rate <= 0.0
+        or unemployment.previous_rate >= 100.0
+        or unemployment.current_rate <= 0.0
+        or unemployment.current_rate >= 100.0
+    )
     missing_metadata = (
         evidence_metadata.retrieval_timestamp is None
         or (evidence_metadata.dataset_id is None and evidence_metadata.table_id is None)
@@ -130,3 +137,7 @@ def _determine_confidence(
         return ConfidenceLabel.LOW
 
     return ConfidenceLabel.MODERATE
+
+
+def _normalize_delta(value: float) -> float:
+    return round(value, 4)
