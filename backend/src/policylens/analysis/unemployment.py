@@ -116,18 +116,12 @@ def _build_finding_statement(
 def _determine_confidence(
     unemployment: UnemploymentInput, evidence_metadata: EvidenceMetadata
 ) -> ConfidenceLabel:
-    edge_case_rate = (
-        unemployment.previous_rate <= 0.0
-        or unemployment.previous_rate >= 100.0
-        or unemployment.current_rate <= 0.0
-        or unemployment.current_rate >= 100.0
-    )
     missing_metadata = (
         evidence_metadata.retrieval_timestamp is None
         or (evidence_metadata.dataset_id is None and evidence_metadata.table_id is None)
     )
 
-    if edge_case_rate or missing_metadata:
+    if missing_metadata:
         return ConfidenceLabel.LOW
 
     return ConfidenceLabel.MODERATE
