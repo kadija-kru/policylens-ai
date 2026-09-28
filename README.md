@@ -100,7 +100,7 @@ pip install -e ".[dev]"
 make run
 ```
 
-By default, the API is available at `http://127.0.0.1:8000`. You can override the host and port with `POLICYLENS_API_HOST` and `POLICYLENS_API_PORT` from `.env.example` by exporting them in your shell before running `make run`. The health endpoint is:
+By default, the API is available at `http://127.0.0.1:8000`. If you want a different host or port, copy the placeholder values from `.env.example` and **export them in your shell manually** before running `make run`; the Makefile does not auto-load env files. The health endpoint is:
 
 ```text
 GET /health
