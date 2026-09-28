@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 
 Number = int | float
+ZERO_BASELINE_ABS_TOLERANCE = 1e-12
 
 
 def _validate_numeric(value: Number, *, name: str) -> float:
@@ -33,7 +34,9 @@ def percentage_change(previous: Number, current: Number) -> float:
 
     previous_value = _validate_numeric(previous, name="previous")
     current_value = _validate_numeric(current, name="current")
-    if math.isclose(previous_value, 0.0, rel_tol=0.0, abs_tol=1e-12):
+    if math.isclose(
+        previous_value, 0.0, rel_tol=0.0, abs_tol=ZERO_BASELINE_ABS_TOLERANCE
+    ):
         msg = "percentage change is undefined for a zero baseline"
         raise ValueError(msg)
 

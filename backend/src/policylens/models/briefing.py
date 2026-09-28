@@ -24,12 +24,25 @@ class Caveat(BaseModel):
 
 
 class Finding(BaseModel):
-    """A briefing finding with evidence and uncertainty metadata."""
+    """A briefing finding with evidence and uncertainty metadata.
+
+    `confidence` expresses how strongly the available evidence supports the statement.
+    `evidence` may be empty only for provisional narrative findings that still require
+    evidence assembly before analyst use.
+    """
 
     statement: str = Field(..., min_length=1)
-    confidence: ConfidenceLabel
+    confidence: ConfidenceLabel = Field(
+        ..., description="Analyst-facing confidence label for the supporting evidence."
+    )
     caveats: list[Caveat] = Field(default_factory=list)
-    evidence: list[EvidenceReference] = Field(default_factory=list)
+    evidence: list[EvidenceReference] = Field(
+        default_factory=list,
+        description=(
+            "Traceable evidence references backing the finding; may be empty only "
+            "while a finding remains provisional."
+        ),
+    )
 
 
 class BriefingOutput(BaseModel):
