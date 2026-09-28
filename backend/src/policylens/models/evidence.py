@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, model_validator
 
 
 class SourceMetadata(BaseModel):
@@ -33,6 +33,13 @@ class Observation(BaseModel):
     period_end: date
     value: float
     source: SourceMetadata
+
+    @model_validator(mode="after")
+    def validate_period_range(self) -> "Observation":
+        if self.period_end < self.period_start:
+            msg = "period_end cannot be earlier than period_start"
+            raise ValueError(msg)
+        return self
 
 
 class CalculationResult(BaseModel):
