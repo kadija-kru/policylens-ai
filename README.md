@@ -44,7 +44,7 @@ The initial MVP foundation in this repository covers:
 - a FastAPI backend with a health endpoint, and
 - local tooling, tests, and CI for a clean development baseline.
 
-A future vertical slice can build on this foundation to answer focused questions such as: **“Why did unemployment change this month?”** using sourced data and validated calculations.
+The current MVP slice now answers a focused question such as: **“How did unemployment change this month?”** using deterministic local input, sourced metadata, and validated calculations. It does **not** perform causal or policy analysis yet.
 
 ## Architecture overview
 
@@ -106,6 +106,106 @@ By default, the API is available at `http://127.0.0.1:8000`. If you want a diffe
 GET /health
 ```
 
+## MVP Slice 1
+
+PolicyLens AI now includes a local, deterministic unemployment-change workflow. It does **not** call external APIs yet; the request payload supplies mock/local data and source metadata so the evidence chain stays reviewable.
+
+Endpoint:
+
+```text
+POST /api/v1/analysis/unemployment-change
+```
+
+Example request:
+
+```json
+{
+  "unemployment": {
+    "previous_rate": 6.3,
+    "current_rate": 6.5,
+    "previous_period": "2026-01",
+    "current_period": "2026-02",
+    "geography": "Canada"
+  },
+  "evidence_metadata": {
+    "source_name": "Statistics Canada",
+    "dataset_id": "labour-force-survey",
+    "table_id": "14-10-0287-01",
+    "measure_name": "Unemployment rate",
+    "unit": "percent",
+    "retrieval_timestamp": "2026-02-15T12:00:00Z"
+  }
+}
+```
+
+Example response:
+
+```json
+{
+  "headline": "Canada unemployment change",
+  "summary": "Canada unemployment increased from 6.3% in 2026-01 to 6.5% in 2026-02, a 0.2 percentage-point rise.",
+  "metrics": {
+    "previous_rate": 6.3,
+    "current_rate": 6.5,
+    "absolute_change": 0.2,
+    "percentage_point_change": 0.2
+  },
+  "finding": {
+    "statement": "Canada unemployment increased from 6.3% in 2026-01 to 6.5% in 2026-02, a 0.2 percentage-point rise.",
+    "confidence": "moderate",
+    "caveats": [
+      {
+        "message": "Single-period change; interpret with broader trend context."
+      }
+    ],
+    "evidence": [
+      {
+        "claim_id": "unemployment-change",
+        "observations": [],
+        "calculations": [
+          {
+            "calculation_type": "percentage_point_change",
+            "formula": "current_rate - previous_rate",
+            "value": 0.2,
+            "input_metrics": ["previous_rate", "current_rate"]
+          }
+        ],
+        "note": "Source Statistics Canada; periods 2026-01 and 2026-02."
+      }
+    ]
+  },
+  "traceability": {
+    "claim": "Canada unemployment increased from 6.3% in 2026-01 to 6.5% in 2026-02, a 0.2 percentage-point rise.",
+    "dataset_metadata": {
+      "source_name": "Statistics Canada",
+      "dataset_id": "labour-force-survey",
+      "table_id": "14-10-0287-01",
+      "measure_name": "Unemployment rate",
+      "unit": "percent",
+      "retrieval_timestamp": "2026-02-15T12:00:00Z"
+    },
+    "periods": {
+      "previous_period": "2026-01",
+      "current_period": "2026-02"
+    },
+    "calculation": {
+      "formula": "current_rate - previous_rate",
+      "inputs": {
+        "current_rate": 6.5,
+        "previous_rate": 6.3
+      },
+      "output": 0.2
+    },
+    "numeric_output": {
+      "previous_rate": 6.3,
+      "current_rate": 6.5,
+      "absolute_change": 0.2,
+      "percentage_point_change": 0.2
+    }
+  }
+}
+```
+
 ## Testing
 
 Run the checks from the repository root:
@@ -121,6 +221,8 @@ Equivalent direct commands:
 ruff check .
 pytest
 ```
+
+These same root-level commands validate the MVP Slice 1 unemployment workflow and its API tests.
 
 ## Roadmap
 
