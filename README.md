@@ -164,12 +164,6 @@ Example response:
         "observations": [],
         "calculations": [
           {
-            "calculation_type": "absolute_change",
-            "formula": "current_rate - previous_rate",
-            "value": 0.2,
-            "input_metrics": ["previous_rate", "current_rate"]
-          },
-          {
             "calculation_type": "percentage_point_change",
             "formula": "current_rate - previous_rate",
             "value": 0.2,

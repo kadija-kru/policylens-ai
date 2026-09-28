@@ -94,6 +94,7 @@ def test_analyze_unemployment_change_for_decrease() -> None:
         "Canada unemployment decreased from 6.5% in 2026-01 to 6.1% in 2026-02, "
         "a 0.4 percentage-point decline."
     )
+    assert response.metrics.absolute_change == pytest.approx(-0.4)
     assert response.metrics.percentage_point_change == pytest.approx(-0.4)
 
 

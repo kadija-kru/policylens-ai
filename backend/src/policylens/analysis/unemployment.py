@@ -58,12 +58,6 @@ def analyze_unemployment_change(
                     claim_id="unemployment-change",
                     calculations=[
                         CalculationResult(
-                            calculation_type="absolute_change",
-                            value=absolute_delta,
-                            formula="current_rate - previous_rate",
-                            input_metrics=["previous_rate", "current_rate"],
-                        ),
-                        CalculationResult(
                             calculation_type="percentage_point_change",
                             value=percentage_point_delta,
                             formula="current_rate - previous_rate",
