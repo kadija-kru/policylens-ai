@@ -29,11 +29,11 @@ def absolute_change(previous: Number, current: Number) -> float:
 
 
 def percentage_change(previous: Number, current: Number) -> float:
-    """Return percent change, raising on a zero baseline because it is undefined."""
+    """Return percent change, raising when the baseline is zero or effectively zero."""
 
     previous_value = _validate_numeric(previous, name="previous")
     current_value = _validate_numeric(current, name="current")
-    if previous_value == 0:
+    if math.isclose(previous_value, 0.0, rel_tol=0.0, abs_tol=1e-12):
         msg = "percentage change is undefined for a zero baseline"
         raise ValueError(msg)
 

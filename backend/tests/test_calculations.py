@@ -34,6 +34,11 @@ def test_percentage_change_negative_zero_baseline_is_explicitly_undefined() -> N
         percentage_change(-0.0, 10)
 
 
+def test_percentage_change_effectively_zero_baseline_is_explicitly_undefined() -> None:
+    with pytest.raises(ValueError, match="zero baseline"):
+        percentage_change(1e-13, 10)
+
+
 def test_percentage_point_change_for_rates() -> None:
     assert percentage_point_change(6.3, 6.5) == pytest.approx(0.2)
 
