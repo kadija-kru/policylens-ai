@@ -228,12 +228,7 @@ ruff check .
 pytest
 ```
 
-For this MVP slice, the key commands run from the repository root are:
-
-```bash
-ruff check .
-pytest
-```
+These same root-level commands validate the MVP Slice 1 unemployment workflow and its API tests.
 
 ## Roadmap
 
