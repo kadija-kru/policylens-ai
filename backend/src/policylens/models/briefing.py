@@ -27,8 +27,8 @@ class Finding(BaseModel):
     """A briefing finding with evidence and uncertainty metadata.
 
     `confidence` expresses how strongly the available evidence supports the statement.
-    `evidence` may be empty only for provisional narrative findings that still require
-    evidence assembly before analyst use.
+    `evidence` is required so every finding remains traceable to at least one
+    supporting evidence reference.
     """
 
     statement: str = Field(..., min_length=1)
@@ -37,11 +37,7 @@ class Finding(BaseModel):
     )
     caveats: list[Caveat] = Field(default_factory=list)
     evidence: list[EvidenceReference] = Field(
-        default_factory=list,
-        description=(
-            "Traceable evidence references backing the finding; may be empty only "
-            "while a finding remains provisional."
-        ),
+        ..., min_length=1, description="Traceable evidence references backing the finding."
     )
 
 

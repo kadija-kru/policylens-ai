@@ -5,6 +5,8 @@ from __future__ import annotations
 import math
 
 Number = int | float
+# Treat extremely small baselines as undefined to avoid percentage changes driven by
+# floating-point noise rather than economically meaningful movement.
 ZERO_BASELINE_ABS_TOLERANCE = 1e-12
 
 
