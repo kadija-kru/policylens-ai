@@ -117,10 +117,10 @@ def _determine_confidence(
     unemployment: UnemploymentInput, evidence_metadata: EvidenceMetadata
 ) -> ConfidenceLabel:
     edge_case_rate = (
-        unemployment.previous_rate == 0.0
-        or unemployment.previous_rate == 100.0
-        or unemployment.current_rate == 0.0
-        or unemployment.current_rate == 100.0
+        unemployment.previous_rate <= 0.0
+        or unemployment.previous_rate >= 100.0
+        or unemployment.current_rate <= 0.0
+        or unemployment.current_rate >= 100.0
     )
     missing_metadata = (
         evidence_metadata.retrieval_timestamp is None

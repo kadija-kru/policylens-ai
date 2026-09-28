@@ -128,6 +128,15 @@ def test_analyze_unemployment_change_lowers_confidence_for_boundary_rate() -> No
     assert response.finding.confidence is ConfidenceLabel.LOW
 
 
+def test_analyze_unemployment_change_lowers_confidence_for_upper_boundary_rate() -> None:
+    response = analyze_unemployment_change(
+        _input(previous_rate=99.7, current_rate=100.0),
+        _metadata(),
+    )
+
+    assert response.finding.confidence is ConfidenceLabel.LOW
+
+
 def test_unemployment_input_rejects_invalid_range() -> None:
     with pytest.raises(ValidationError, match="less than or equal to 100"):
         _input(current_rate=101.0)
