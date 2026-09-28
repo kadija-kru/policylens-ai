@@ -44,7 +44,7 @@ The initial MVP foundation in this repository covers:
 - a FastAPI backend with a health endpoint, and
 - local tooling, tests, and CI for a clean development baseline.
 
-The current MVP slice now answers a focused question such as: **“Why did unemployment change this month?”** using deterministic local input, sourced metadata, and validated calculations.
+The current MVP slice now answers a focused question such as: **“How did unemployment change this month?”** using deterministic local input, sourced metadata, and validated calculations. It does **not** perform causal or policy analysis yet.
 
 ## Architecture overview
 

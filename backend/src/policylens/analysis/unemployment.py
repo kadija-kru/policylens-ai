@@ -88,17 +88,17 @@ def analyze_unemployment_change(
 def _build_finding_statement(
     unemployment: UnemploymentInput, percentage_point_delta: float
 ) -> str:
-    if percentage_point_delta > 0:
+    if unemployment.current_rate > unemployment.previous_rate:
         direction = "increased"
         move = "rise"
-    elif percentage_point_delta < 0:
+    elif unemployment.current_rate < unemployment.previous_rate:
         direction = "decreased"
         move = "decline"
     else:
         direction = "was unchanged"
         move = "change"
 
-    if percentage_point_delta == 0:
+    if unemployment.current_rate == unemployment.previous_rate:
         return (
             f"{unemployment.geography} unemployment {direction} at "
             f"{unemployment.current_rate:.1f}% between {unemployment.previous_period} "
