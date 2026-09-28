@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field, HttpUrl, model_validator
+from pydantic import BaseModel, Field, FiniteFloat, HttpUrl, model_validator
 
 
 class SourceMetadata(BaseModel):
@@ -31,7 +31,7 @@ class Observation(BaseModel):
     metric: str = Field(..., min_length=1)
     period_start: date
     period_end: date
-    value: float
+    value: FiniteFloat
     source: SourceMetadata
 
     @model_validator(mode="after")
@@ -50,7 +50,7 @@ class CalculationResult(BaseModel):
         "percentage_change",
         "percentage_point_change",
     ]
-    value: float
+    value: FiniteFloat
     formula: str = Field(..., min_length=1)
     input_metrics: list[str] = Field(default_factory=list)
 
@@ -62,3 +62,10 @@ class EvidenceReference(BaseModel):
     observations: list[Observation] = Field(default_factory=list)
     calculations: list[CalculationResult] = Field(default_factory=list)
     note: str | None = None
+
+    @model_validator(mode="after")
+    def validate_supporting_evidence(self) -> "EvidenceReference":
+        if not self.observations and not self.calculations:
+            msg = "at least one observation or calculation is required"
+            raise ValueError(msg)
+        return self

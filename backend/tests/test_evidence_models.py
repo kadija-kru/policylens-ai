@@ -1,4 +1,4 @@
-from datetime import date
+import math
 
 import pytest
 from policylens.models.evidence import (
@@ -97,12 +97,31 @@ def test_source_metadata_rejects_invalid_literal_and_url_values(
         _source_metadata(**{field_name: value})
 
 
+@pytest.mark.parametrize("value", [math.nan, math.inf, -math.inf])
+def test_observation_rejects_non_finite_values(value: float) -> None:
+    with pytest.raises(ValidationError):
+        Observation(
+            metric="unemployment_rate",
+            period_start="2026-01-01",
+            period_end="2026-01-31",
+            value=value,
+            source=_source_metadata(),
+        )
+
+
 def test_observation_rejects_inverted_period_range() -> None:
     with pytest.raises(ValidationError, match="period_end cannot be earlier than period_start"):
         Observation(
             metric="unemployment_rate",
-            period_start=date(2026, 2, 1),
+            period_start="2026-02-01",
             period_end="2026-01-31",
             value=6.5,
             source=_source_metadata(),
         )
+
+
+def test_evidence_reference_requires_supporting_observation_or_calculation() -> None:
+    with pytest.raises(
+        ValidationError, match="at least one observation or calculation is required"
+    ):
+        EvidenceReference(claim_id="claim-1")

@@ -37,4 +37,4 @@ class BriefingOutput(BaseModel):
 
     title: str = Field(..., min_length=1)
     summary: str = Field(..., min_length=1)
-    findings: list[Finding] = Field(default_factory=list)
+    findings: list[Finding] = Field(..., min_length=1)

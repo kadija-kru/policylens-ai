@@ -1,4 +1,3 @@
-
 import pytest
 from policylens.models.briefing import BriefingOutput, Caveat, ConfidenceLabel, Finding
 from policylens.models.evidence import (
@@ -122,12 +121,26 @@ def test_briefing_output_rejects_empty_required_text(field_name: str) -> None:
     payload = {
         "title": "Labour market update",
         "summary": "Unemployment increased modestly month over month.",
-        "findings": [],
+        "findings": [
+            {
+                "statement": "National unemployment rate increased.",
+                "confidence": "moderate",
+            }
+        ],
     }
     payload[field_name] = ""
 
     with pytest.raises(ValidationError):
         BriefingOutput(**payload)
+
+
+def test_briefing_output_requires_at_least_one_finding() -> None:
+    with pytest.raises(ValidationError):
+        BriefingOutput(
+            title="Labour market update",
+            summary="Unemployment increased modestly month over month.",
+            findings=[],
+        )
 
 
 def test_finding_rejects_invalid_confidence_value() -> None:
